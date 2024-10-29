@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE Final Year Attendance</title>
+    <link rel="stylesheet" href="style1.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Attendance System</h1>
+
+        <!-- User Section -->
+        <div id="user-section" class="hidden">
+            <h2>User Section: Submit Attendance</h2>
+            <table id="user-attendance-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Student Name and Roll Number</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="user-student-list">
+                    <!-- Students will be dynamically added here -->
+                </tbody>
+            </table>
+            <button id="user-save-btn" class="btn">Submit Attendance</button>
+        </div>
+
+        <!-- Admin Section -->
+        <div id="admin-section" class="hidden">
+            <h2>Admin Section: View Attendance</h2>
+            <div id="attendance-files">
+                <!-- Submitted attendance files will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Function to get URL parameters (to determine the role: user or admin)
+        function getUrlParameter(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Load the page based on the user's role (admin or user)
+        window.onload = function() {
+            const role = getUrlParameter("role");
+            
+            if (role === "admin") {
+                document.getElementById("admin-section").classList.remove("hidden");
+                loadAttendanceFiles();
+            } else if (role === "user") {
+                document.getElementById("user-section").classList.remove("hidden");
+                loadStudentList();
+            } else {
+                alert("Invalid role! Redirecting to login page...");
+                window.location.href = "login.html";
+            }
+        };
+
+        // Load a list of students for the user to mark attendance
+        function loadStudentList() {
+            const userStudentList = document.getElementById("user-student-list");
+
+            // Sample data: student name, roll number, and image URL
+            const students = [
+                { name: "Abinaya", roll: "610221104001", image: "images/abi.jpg" },
+                { name: "Anbuselvan", roll: "610221104002", image: "images/anbu.jpg" },
+                { name: "Arun Kumar", roll: "610221104004", image: "images/sample.jpg" },
+                { name: "Balachandar", roll: "610221104005", image: "images/sample.jpg" },
+                { name: "Baskar", roll: "610221104005", image: "images/sample.jpg" },
+                { name: "Deva Dharshini", roll: "610221104009", image: "images/sample.jpg" },
+                { name: "Dhanush", roll: "6102211040010", image: "images/sample.jpg" },
+                { name: "Durga Devi", roll: "610221104012", image: "images/sample.jpg" },
+                { name: "Gayathri", roll: "610221104013", image: "images/sample.jpg" },
+                { name: "Gopinath", roll: "610221104014", image: "images/sample.jpg" },
+                { name: "Gowri manogari", roll: "610221104015", image: "images/sample.jpg" },
+                { name: "Gowthamen", roll: "610221104016", image: "images/gowtham.webp" },
+                { name: "Hemanth Kumar", roll: "610221104017", image: "images/sample.jpg" },
+                { name: "Kalaivani", roll: "610221104018", image: "images/sample.jpg" },
+                { name: "Kayal Vizhi", roll: "610221104019", image: "images/sample.jpg" },
+                { name: "Kiran", roll: "610221104020", image: "images/kiran.jpg" },
+                { name: "Kishore Babu", roll: "610221104021", image: "images/sample.jpg" },
+                { name: "Lathika", roll: "610221104022", image: "images/sample.jpg" },
+                { name: "Mani Bharathi", roll: "610221104023", image: "images/sample.jpg" },
+                { name: "Muthu Kumar", roll: "610221104025", image: "images/sample.jpg" },
+                { name: "Nithya", roll: "610221104026", image: "images/nithya.jpg" },
+                { name: "Niyamathula", roll: "610221104028", image: "images/sample.jpg" },
+                { name: "Prakash", roll: "610221104030", image: "images/sample.jpg" },
+                { name: "Priya", roll: "610221104031", image: "images/sample.jpg" },
+                { name: "Priya Bharathi", roll: "610221104032", image: "images/sample.jpg" },
+                { name: "Ramesh Krishna", roll: "610221104034", image: "images/sample.jpg" },
+                { name: "Roshan", roll: "610221104035", image: "images/sample.jpg" },
+                { name: "Rubala", roll: "610221104036", image: "images/sample.jpg" },
+                { name: "Ruthra Devi", roll: "610221104037", image: "images/sample.jpg" },
+                { name: "Sanjay Kumar", roll: "610221104038", image: "images/sample.jpg" },
+                { name: "Santhosh", roll: "610221104040", image: "images/sample.jpg" },
+                { name: "Sham Praison", roll: "610221104042", image: "images/sample.jpg" },
+                { name: "Soniya", roll: "610221104044", image: "images/soniya.jpg" },
+                { name: "Srimathi", roll: "610221104045", image: "images/sample.jpg" },
+                { name: "Subalatha", roll: "610221104046", image: "images/sample.jpg" },
+                { name: "Subash", roll: "610221104047", image: "images/sample.jpg" },
+                { name: "Uthaya Bharathi", roll: "610221104048", image: "images/sample.jpg" },
+                { name: "Varshini", roll: "610221104049", image: "images/sample.jpg" },
+                { name: "veeramuthu", roll: "610221104050", image: "images/sample.jpg" },
+                { name: "Vimalya", roll: "610221104051", image: "images/sample.jpg" },
+                { name: "Yogaraj", roll: "610221104052", image: "images/sample.jpg" }
+            ];
+
+            students.forEach(student => {
+                let row = document.createElement("tr");
+
+                // Student image, name, and roll number
+                row.innerHTML = `
+                    <td><img src="${student.image}" alt="${student.name}" class="student-image"></td>
+                    <td>${student.name}<br><small>Roll: ${student.roll}</small></td>
+                    <td>
+                        <select class="attendance-status">
+                            <option value="Present">Present</option>
+                            <option value="Absent">Absent</option>
+                            <option value="Late">Late</option>
+                        </select>
+                    </td>
+                `;
+                userStudentList.appendChild(row);
+            });
+
+            // Add event listener for attendance submission
+            document.getElementById("user-save-btn").addEventListener("click", submitAttendance);
+        }
+
+        // Function to save attendance data and generate Excel file
+        function submitAttendance() {
+            const rows = document.querySelectorAll("sample.jpguser-student-list tr");
+            let attendanceData = [];
+            rows.forEach(row => {
+                const studentName = row.querySelector("td:nth-child(2)").textContent.split("\n")[0];
+                const rollNumber = row.querySelector("td:nth-child(2) small").textContent.replace("Roll: ", "");
+                const status = row.querySelector("select").value;
+                attendanceData.push([studentName, rollNumber, status]);
+            });
+
+            // Create a new workbook and add the data to a sheet
+            const workbook = XLSX.utils.book_new();
+            const worksheet = XLSX.utils.aoa_to_sheet([["Student Name", "Roll Number", "Status"], ...attendanceData]);
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Attendance");
+
+            // Get current date and time for the filename
+            const now = new Date();
+            const date = now.toISOString().split('T')[0];  // YYYY-MM-DD
+            const time = now.toTimeString().split(' ')[0].replace(/:/g, '-');  // HH-MM-SS
+
+            // Generate Excel file name with current date and time
+            const fileName = `Attendance_${date}_${time}.xlsx`;
+
+            // Convert the workbook to a Blob
+            const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            const blob = new Blob([wbout], { type: 'application/octet-stream' });
+
+            // Create a download URL for the Blob
+            const url = URL.createObjectURL(blob);
+
+            // Save the Blob URL and file name to localStorage
+            saveAttendanceFile(fileName, url);
+
+            // Automatically download the file for the user
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = fileName;
+            link.click();
+        }
+
+        // Save submitted attendance file (Blob URL and file name) for admin to view
+        function saveAttendanceFile(fileName, url) {
+            let submittedFiles = JSON.parse(localStorage.getItem("attendanceFiles")) || [];
+            submittedFiles.push({ fileName, url });
+            localStorage.setItem("attendanceFiles", JSON.stringify(submittedFiles));
+            alert("Attendance submitted and saved successfully!");
+        }
+
+        // Load attendance files for admin and display download links
+        function loadAttendanceFiles() {
+            const attendanceFilesContainer = document.getElementById("attendance-files");
+            const submittedFiles = JSON.parse(localStorage.getItem("attendanceFiles")) || [];
+
+            if (submittedFiles.length > 0) {
+                submittedFiles.forEach(file => {
+                    const fileLink = document.createElement("a");
+                    fileLink.href = file.url;
+                    fileLink.textContent = file.fileName;
+                    fileLink.download = file.fileName;
+                    fileLink.classList.add("file-link");
+
+                    const fileItem = document.createElement("div");
+                    fileItem.appendChild(fileLink);
+                    attendanceFilesContainer.appendChild(fileItem);
+                });
+            } else {
+                attendanceFilesContainer.textContent = "No attendance files submitted yet.";
+            }
+        }
+    </script>
+</body>
+<footer>
+    @PediaGrifYT
+</footer>
+</html>
