@@ -1,0 +1,157 @@
+body {
+    font-family: Arial, sans-serif;
+    background: url('images/main.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #000000;
+    padding: 20px;
+}
+footer{
+    font-size: Arial, sans-serif;
+    font-size: 20px;
+    background-size: 18px;
+    font-weight: bold;
+    color: #000000;
+    padding: fixed;
+    margin-left: 80px;
+}
+
+.file-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.file-link:hover {
+    text-decoration: underline;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* Student image styling */
+.student-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+td small {
+    color: #ff6c6c;
+    font-size: 0.9em;
+}
+
+
+.container {
+    background-color: rgba(255, 255, 255, 0.315);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: auto;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.login-container {
+    max-width: 400px;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #000000;
+}
+
+table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+    background-color: rgba(201, 201, 201, 0.521);
+    box-shadow: 0 0 10px rgb(58, 6, 6);
+}
+
+table, th, td {
+    border: 1px solid #443535;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+button.btn {
+    padding: 10px 20px;
+    margin: 10px 5px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button.btn:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+button.btn:active {
+    background-color: #1e7e34;
+    transform: scale(0.95);
+}
+
+button.btn.danger {
+    background-color: #dc3545;
+}
+
+button.btn.danger:hover {
+    background-color: #c82333;
+}
+
+button.btn.danger:active {
+    background-color: #bd2130;
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: calc(100% - 22px);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
